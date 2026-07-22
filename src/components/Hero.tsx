@@ -20,21 +20,22 @@ export function Hero() {
       </div>
 
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-        <div className="animate-rise text-center lg:text-left">
+        {/* min-w-0 evita que el contenido más ancho estire la columna del grid */}
+        <div className="animate-rise min-w-0 text-center lg:text-left">
           <p className="inline-flex items-center gap-2 rounded-full border border-basil-500/40 bg-basil-500/10 px-4 py-1.5 text-xs font-semibold tracking-[0.2em] text-basil-300">
             <span className="h-1.5 w-1.5 rounded-full bg-basil-400" />
-            PIZZERÍA ARTESANAL · {site.city.toUpperCase()}
+            COCINA OCULTA · {site.city.toUpperCase()}
           </p>
 
           <h1 className="font-display text-brand-gradient mt-6 text-[clamp(3rem,11vw,5.75rem)] leading-[0.95]">
-            Pizza con
+            Pizza de
             <br />
-            actitud ninja
+            cocina oculta
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-cream-dim lg:mx-0 sm:text-lg">
-            Masa artesanal, ingredientes frescos y combinaciones que solo encuentras aquí. Elige tu
-            favorita y pídela por WhatsApp en un toque.
+            Sin local, sin filas: cocinamos solo para domicilio. Masa artesanal, ingredientes
+            frescos y combinaciones que solo encuentras aquí. Pídela por WhatsApp en un toque.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
@@ -54,18 +55,20 @@ export function Hero() {
             </a>
           </div>
 
-          <dl className="mt-10 flex justify-center gap-8 lg:justify-start">
+          <dl className="mt-10 flex flex-wrap justify-center gap-x-5 gap-y-4 sm:gap-x-8 lg:justify-start">
             <div>
               <dt className="text-xs uppercase tracking-widest text-cream-dim">Desde</dt>
-              <dd className="font-display mt-1 text-2xl text-basil-300">{formatPrice(cheapest)}</dd>
+              <dd className="font-display mt-1 text-xl text-basil-300 sm:text-2xl">
+                {formatPrice(cheapest)}
+              </dd>
             </div>
-            <div className="border-l border-grape-700/60 pl-8">
+            <div className="border-l border-grape-700/60 pl-5 sm:pl-8">
               <dt className="text-xs uppercase tracking-widest text-cream-dim">Sabores</dt>
-              <dd className="font-display mt-1 text-2xl text-basil-300">{pizzas.length}</dd>
+              <dd className="font-display mt-1 text-xl text-basil-300 sm:text-2xl">{pizzas.length}</dd>
             </div>
-            <div className="border-l border-grape-700/60 pl-8">
+            <div className="border-l border-grape-700/60 pl-5 sm:pl-8">
               <dt className="text-xs uppercase tracking-widest text-cream-dim">Entrega</dt>
-              <dd className="font-display mt-1 text-2xl text-basil-300">Domicilio</dd>
+              <dd className="font-display mt-1 text-xl text-basil-300 sm:text-2xl">Domicilio</dd>
             </div>
           </dl>
         </div>
