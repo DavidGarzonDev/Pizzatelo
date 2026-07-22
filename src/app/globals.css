@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta tomada directamente de las piezas gráficas de la marca */
+  --color-ink: #060506;
+  --color-ink-soft: #0e0c11;
+  --color-ink-card: #141017;
+
+  --color-grape-300: #c08fdd;
+  --color-grape-400: #a05cc8;
+  --color-grape-500: #7b3a9e;
+  --color-grape-600: #5e2a7a;
+  --color-grape-700: #431c58;
+
+  --color-basil-300: #b7dd6a;
+  --color-basil-400: #96c93d;
+  --color-basil-500: #7cae2a;
+  --color-basil-600: #5f861f;
+
+  --color-cream: #f5ebd7;
+  --color-cream-dim: #cfc3ad;
+  --color-crust: #e8a13c;
+  --color-pepper: #c33d2e;
+
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-rise: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade: fade 0.25s ease-out both;
+  --animate-drift: drift 18s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.06);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* deja aire bajo el header fijo al saltar a una sección */
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-grape-500);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-basil-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* Título con el degradado crema de las piezas gráficas */
+@utility text-brand-gradient {
+  background-image: linear-gradient(180deg, #fffaf0 0%, var(--color-cream) 50%, #d9c8a8 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Elemento que aparece al entrar en pantalla (ver useReveal) */
+@utility reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility reveal-in {
+  opacity: 1;
+  transform: none;
+}
