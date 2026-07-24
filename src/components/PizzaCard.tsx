@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { site } from "@/config/site";
 import { formatPrice } from "@/lib/format";
 import { orderPizzaLink } from "@/lib/whatsapp";
 import type { Pizza } from "@/types/menu";
@@ -54,6 +55,14 @@ export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
         </div>
 
         <p className="mt-2 text-sm leading-relaxed text-cream-dim">{pizza.tagline}</p>
+
+        <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-basil-300">
+          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 stroke-basil-400" fill="none" strokeWidth="1.7" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 3v18M3 12h18" strokeWidth="1.1" />
+          </svg>
+          {site.size.summary}
+        </p>
 
         <ul className="mt-4 flex flex-wrap gap-1.5">
           {pizza.ingredients.slice(0, 3).map((item) => (

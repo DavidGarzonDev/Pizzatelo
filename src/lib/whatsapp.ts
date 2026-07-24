@@ -10,7 +10,7 @@ export function whatsappLink(message: string): string {
 /** Pedido de una pizza concreta. */
 export function orderPizzaLink(pizza: Pizza): string {
   return whatsappLink(
-    `¡Hola ${site.name}! 🍕 Quiero pedir una pizza *${pizza.name}* (${formatPrice(pizza.price)}).`,
+    `¡Hola ${site.name}! 🍕 Quiero pedir una pizza *${pizza.name}* — ${site.size.label}, ${site.size.slices} porciones (${formatPrice(pizza.price)}).`,
   );
 }
 

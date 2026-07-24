@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { site } from "@/config/site";
 import { formatPrice } from "@/lib/format";
 import { orderPizzaLink } from "@/lib/whatsapp";
 import type { Pizza } from "@/types/menu";
@@ -79,6 +80,21 @@ export function PizzaDialog({ pizza, onClose }: PizzaDialogProps) {
             </h2>
 
             <p className="mt-4 text-sm leading-relaxed text-cream-dim">{pizza.description}</p>
+
+            <dl className="mt-6 grid grid-cols-3 gap-2 rounded-2xl border border-grape-700/45 bg-ink-card/60 p-4 text-center">
+              <div>
+                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Tamaño</dt>
+                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.label}</dd>
+              </div>
+              <div className="border-x border-grape-700/45">
+                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Porciones</dt>
+                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.slices}</dd>
+              </div>
+              <div>
+                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Diámetro</dt>
+                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.diameterCm} cm</dd>
+              </div>
+            </dl>
 
             <div className="mt-6">
               <h3 className="text-xs font-semibold uppercase tracking-widest text-cream-dim">

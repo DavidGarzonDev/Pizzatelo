@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  /* Breakpoint extra para móviles grandes (por defecto Tailwind arranca en sm=640) */
+  --breakpoint-xs: 400px;
+
   /* Paleta tomada directamente de las piezas gráficas de la marca */
   --color-ink: #060506;
   --color-ink-soft: #0e0c11;

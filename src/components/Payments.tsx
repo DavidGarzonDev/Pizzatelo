@@ -47,7 +47,7 @@ export function Payments() {
                       <button
                         type="button"
                         onClick={() => copy(method.id, account)}
-                        className="mt-auto self-start rounded-full border border-grape-600/70 px-4 py-2 text-xs font-semibold text-cream-dim transition-colors hover:border-basil-400 hover:text-basil-300"
+                        className="mt-auto self-start rounded-full border border-grape-600/70 px-4 py-2.5 text-xs font-semibold text-cream-dim transition-colors hover:border-basil-400 hover:text-basil-300"
                       >
                         {copied === method.id ? "¡Copiado!" : "Copiar número"}
                       </button>

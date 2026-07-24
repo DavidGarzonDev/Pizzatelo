@@ -6,7 +6,8 @@ export function Footer() {
 
   return (
     <footer className="border-t border-grape-700/40 bg-ink-soft">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-12 text-center sm:px-6">
+      {/* pb extra en móvil: deja al botón flotante de WhatsApp una zona libre abajo */}
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 pb-28 pt-12 text-center sm:px-6 sm:pb-12">
         <Image
           src="/images/logo.png"
           alt={`Logo de ${site.name}`}
@@ -36,23 +37,39 @@ export function Footer() {
           @_pizzatelo
         </a>
 
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-cream-dim">
-          <a href="#menu" className="transition-colors hover:text-basil-300">
+        {/* py-2 da un área táctil cómoda (~40px) en móvil sin cambiar el look */}
+        <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm text-cream-dim">
+          <a href="#menu" className="px-3 py-2 transition-colors hover:text-basil-300">
             Menú
           </a>
-          <a href="#pagos" className="transition-colors hover:text-basil-300">
+          <a href="#pagos" className="px-3 py-2 transition-colors hover:text-basil-300">
             Métodos de pago
           </a>
-          <a href="#horarios" className="transition-colors hover:text-basil-300">
+          <a href="#horarios" className="px-3 py-2 transition-colors hover:text-basil-300">
             Horarios
           </a>
-          <a href={`tel:+${site.whatsapp}`} className="transition-colors hover:text-basil-300">
+          <a
+            href={`tel:+${site.whatsapp}`}
+            className="px-3 py-2 transition-colors hover:text-basil-300"
+          >
             {site.phoneDisplay}
           </a>
         </div>
 
         <p className="text-xs text-cream-dim/70">
           © {year} {site.name}. Todos los derechos reservados.
+        </p>
+
+        <p className="text-xs text-cream-dim/70">
+          Creada por{" "}
+          <a
+            href="https://davidgarzon.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block py-1 font-semibold text-basil-300 underline underline-offset-4 transition-colors hover:text-basil-400"
+          >
+            DavidGarzonDev
+          </a>
         </p>
       </div>
     </footer>

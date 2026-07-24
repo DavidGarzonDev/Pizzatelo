@@ -27,10 +27,10 @@ export function Hero() {
             COCINA OCULTA · {site.city.toUpperCase()}
           </p>
 
-          <h1 className="font-display text-brand-gradient mt-6 text-[clamp(3rem,11vw,5.75rem)] leading-[0.95]">
-            Pizza de
+          <h1 className="font-display text-brand-gradient mt-6 text-[clamp(3rem,13vw,6.5rem)] leading-[0.95]">
+            Cocina
             <br />
-            cocina oculta
+            oculta
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-cream-dim lg:mx-0 sm:text-lg">
@@ -73,10 +73,14 @@ export function Hero() {
           </dl>
         </div>
 
-        <div className="animate-pop relative mx-auto w-full max-w-md" style={{ animationDelay: "120ms" }}>
+        {/* Logo: discreto en móvil (el header ya lo muestra) y protagonista en escritorio */}
+        <div
+          className="animate-pop relative mx-auto w-full max-w-[13rem] xs:max-w-[15rem] sm:max-w-xs lg:max-w-md"
+          style={{ animationDelay: "120ms" }}
+        >
           <div
             aria-hidden="true"
-            className="absolute inset-6 rounded-full bg-grape-500/25 blur-3xl"
+            className="absolute inset-6 rounded-full bg-grape-500/25 blur-2xl sm:blur-3xl"
           />
           <Image
             src="/images/logo.png"
@@ -84,7 +88,8 @@ export function Hero() {
             width={708}
             height={720}
             priority
-            className="relative w-full drop-shadow-[0_25px_45px_rgba(0,0,0,0.7)]"
+            sizes="(max-width: 640px) 240px, (max-width: 1024px) 320px, 448px"
+            className="relative w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.6)] sm:drop-shadow-[0_25px_45px_rgba(0,0,0,0.7)]"
           />
         </div>
       </div>

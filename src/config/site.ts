@@ -15,6 +15,15 @@ export const site = {
   /** El mismo número, formateado para mostrar en pantalla. */
   phoneDisplay: "323 348 4308",
 
+  /** Tamaño único de todas las pizzas. Si algún día hay varios, esto crece. */
+  size: {
+    label: "Mediana",
+    slices: 4,
+    diameterCm: 30,
+    /** Frase lista para mostrar: "Mediana · 4 porciones · 30 cm". */
+    summary: "Mediana · 4 porciones · 30 cm",
+  },
+
   hours: [
     { days: "Lunes a Jueves", time: "5:00 p.m. – 10:00 p.m." },
     { days: "Viernes y Sábado", time: "5:00 p.m. – 11:00 p.m." },
