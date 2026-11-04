@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { site } from "@/config/site";
 import { formatPrice } from "@/lib/format";
-import { namiOrderLink } from "@/lib/nami";
 import { orderPizzaLink } from "@/lib/whatsapp";
 import type { Pizza } from "@/types/menu";
 
@@ -126,14 +125,6 @@ export function PizzaDialog({ pizza, onClose }: PizzaDialogProps) {
                 className="mt-5 block rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
               >
                 Pedir esta pizza
-              </a>
-              <a
-                href={namiOrderLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 block rounded-full border border-grape-600/60 px-6 py-3.5 text-center font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
-              >
-                Pedir en {site.nami.label}
               </a>
             </div>
           </div>

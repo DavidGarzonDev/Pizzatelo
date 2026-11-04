@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { site } from "@/config/site";
-import { namiOrderLink } from "@/lib/nami";
 import { generalOrderLink } from "@/lib/whatsapp";
 
 const links = [
@@ -58,18 +57,10 @@ export function Header() {
             </a>
           ))}
           <a
-            href={namiOrderLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 rounded-full border border-cream/25 px-5 py-2 text-sm font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
-          >
-            Pedir en {site.nami.label}
-          </a>
-          <a
             href={generalOrderLink()}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-basil-500 px-5 py-2 text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
+            className="ml-2 rounded-full bg-basil-500 px-5 py-2 text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
           >
             Pedir ahora
           </a>
@@ -106,7 +97,7 @@ export function Header() {
       <div
         id="menu-movil"
         className={`overflow-hidden border-t border-grape-700/40 transition-[max-height] duration-300 md:hidden ${
-          open ? "max-h-96" : "max-h-0 border-transparent"
+          open ? "max-h-72" : "max-h-0 border-transparent"
         }`}
       >
         <nav className="flex flex-col gap-1 px-4 py-3" aria-label="Secciones">
@@ -128,15 +119,6 @@ export function Header() {
             className="mt-1 rounded-xl bg-basil-500 px-3 py-3 text-center text-sm font-semibold text-ink"
           >
             Pedir por WhatsApp
-          </a>
-          <a
-            href={namiOrderLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
-            className="rounded-xl border border-cream/25 px-3 py-3 text-center text-sm font-semibold text-cream"
-          >
-            Pedir en {site.nami.label}
           </a>
         </nav>
       </div>
