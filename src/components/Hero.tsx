@@ -2,6 +2,7 @@ import Image from "next/image";
 import { site } from "@/config/site";
 import { pizzas } from "@/data/menu";
 import { formatPrice } from "@/lib/format";
+import { namiOrderLink } from "@/lib/nami";
 import { generalOrderLink } from "@/lib/whatsapp";
 
 export function Hero() {
@@ -35,13 +36,13 @@ export function Hero() {
 
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-cream-dim lg:mx-0 sm:text-lg">
             Sin local, sin filas: cocinamos solo para domicilio. Masa artesanal, ingredientes
-            frescos y combinaciones que solo encuentras aquí. Pídela por WhatsApp en un toque.
+            frescos y combinaciones que solo encuentras aquí. Pídela por WhatsApp o en Ñami en un toque.
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
             <a
               href="#menu"
-              className="w-full rounded-full bg-grape-500 px-8 py-3.5 text-center font-semibold text-cream shadow-lg shadow-grape-700/40 transition-all hover:-translate-y-0.5 hover:bg-grape-400 sm:w-auto"
+              className="w-full rounded-full bg-grape-500 px-8 py-3.5 text-center font-semibold text-cream shadow-lg shadow-grape-700/40 transition-all hover:-translate-y-0.5 hover:bg-grape-400 sm:w-auto sm:whitespace-nowrap"
             >
               Ver el menú
             </a>
@@ -49,9 +50,17 @@ export function Hero() {
               href={generalOrderLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full rounded-full border border-cream/25 px-8 py-3.5 text-center font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300 sm:w-auto"
+              className="w-full rounded-full border border-cream/25 px-8 py-3.5 text-center font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300 sm:w-auto sm:whitespace-nowrap"
             >
               Pedir por WhatsApp
+            </a>
+            <a
+              href={namiOrderLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full rounded-full border border-cream/25 px-8 py-3.5 text-center font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300 sm:w-auto sm:whitespace-nowrap"
+            >
+              Pedir en {site.nami.label}
             </a>
           </div>
 

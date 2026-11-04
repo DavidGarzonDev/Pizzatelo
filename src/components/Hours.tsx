@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/config/site";
+import { namiOrderLink } from "@/lib/nami";
 import { generalOrderLink } from "@/lib/whatsapp";
 
 export function Hours() {
@@ -33,17 +34,27 @@ export function Hours() {
               <h3 className="font-display text-3xl text-cream">¿Listo para pedir?</h3>
               <p className="mt-3 text-sm leading-relaxed text-cream-dim">
                 Escríbenos por WhatsApp con la pizza que quieres y tu dirección. Te confirmamos el
-                tiempo de entrega al instante.
+                tiempo de entrega al instante. ¿Prefieres una app? Haz todo tu pedido en Ñami.
               </p>
 
-              <a
-                href={generalOrderLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-7 inline-flex items-center justify-center gap-2 self-start rounded-full bg-basil-500 px-7 py-3.5 font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-basil-400"
-              >
-                Escribir por WhatsApp
-              </a>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href={generalOrderLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-basil-500 px-7 py-3.5 font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-basil-400"
+                >
+                  Escribir por WhatsApp
+                </a>
+                <a
+                  href={namiOrderLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-cream/25 px-7 py-3.5 font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300"
+                >
+                  Pedir en {site.nami.label}
+                </a>
+              </div>
 
               <p className="mt-5 text-sm text-cream-dim">
                 O llámanos al{" "}
