@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
+import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
-import { orderPizzaLink } from "@/lib/whatsapp";
 import type { Pizza } from "@/types/menu";
 
 interface PizzaDialogProps {
@@ -14,6 +15,7 @@ interface PizzaDialogProps {
 
 export function PizzaDialog({ pizza, onClose }: PizzaDialogProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { qtyOf, add, setQty, open: openCart } = useCart();
 
   useEffect(() => {
     if (!pizza) return;
@@ -118,14 +120,35 @@ export function PizzaDialog({ pizza, onClose }: PizzaDialogProps) {
                 <span className="font-display text-4xl text-basil-300">{formatPrice(pizza.price)}</span>
               </div>
 
-              <a
-                href={orderPizzaLink(pizza)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 block rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
-              >
-                Pedir esta pizza
-              </a>
+              {qtyOf(pizza.slug) > 0 ? (
+                <>
+                  <div className="mt-5">
+                    <QtyStepper
+                      qty={qtyOf(pizza.slug)}
+                      name={pizza.name}
+                      onChange={(value) => setQty(pizza.slug, value)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      openCart();
+                    }}
+                    className="mt-3 block w-full rounded-full border border-grape-600/60 px-6 py-3.5 text-center font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
+                  >
+                    Ver mi pedido
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => add(pizza.slug)}
+                  className="mt-5 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
+                >
+                  Agregar al pedido
+                </button>
+              )}
             </div>
           </div>
         </div>

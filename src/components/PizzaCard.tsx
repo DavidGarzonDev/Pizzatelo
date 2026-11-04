@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
 import { formatPrice } from "@/lib/format";
-import { orderPizzaLink } from "@/lib/whatsapp";
+import { useCart } from "@/lib/cart";
 import type { Pizza } from "@/types/menu";
 
 interface PizzaCardProps {
@@ -10,6 +13,9 @@ interface PizzaCardProps {
 }
 
 export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
+  const { qtyOf, add, setQty } = useCart();
+  const qty = qtyOf(pizza.slug);
+
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-grape-700/45 bg-ink-card transition-all duration-300 hover:-translate-y-1.5 hover:border-grape-400/70 hover:shadow-[0_24px_60px_-18px_rgba(123,58,158,0.65)]">
       {pizza.featured && (
@@ -80,14 +86,20 @@ export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
           )}
         </ul>
 
-        <a
-          href={orderPizzaLink(pizza)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-5 block rounded-full bg-basil-500 px-4 py-2.5 text-center text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
-        >
-          Pedir por WhatsApp
-        </a>
+        {/* mt-auto deja el botón al fondo aunque las tarjetas tengan textos de distinto largo */}
+        <div className="mt-auto pt-5">
+          {qty > 0 ? (
+            <QtyStepper qty={qty} name={pizza.name} onChange={(value) => setQty(pizza.slug, value)} />
+          ) : (
+            <button
+              type="button"
+              onClick={() => add(pizza.slug)}
+              className="block w-full rounded-full bg-basil-500 px-4 py-2.5 text-center text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
+            >
+              Agregar al pedido
+            </button>
+          )}
+        </div>
       </div>
     </article>
   );
