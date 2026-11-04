@@ -1,34 +1,50 @@
 /**
- * Barrios de Yumbo que aparecen en el selector del pedido.
+ * Barrios de Yumbo que aparecen en el buscador del pedido (lista del negocio).
  *
  * Solo entregamos en Yumbo, así que no hay selector de ciudad: el cliente
- * elige su barrio y listo. Si falta alguno, agrégalo aquí (en orden
- * alfabético). El cliente siempre puede elegir "Otro barrio" y escribirlo.
+ * busca su barrio y listo. Si falta alguno, agrégalo aquí (en orden
+ * alfabético). El cliente siempre puede usar el barrio tal como lo escribió en el buscador.
  */
 export const barrios: string[] = [
-  "Asovivir",
+  "Barrio Chino",
   "Belalcázar",
   "Bellavista",
   "Bolívar",
   "Buenos Aires",
-  "Ciudadela Fray Peña",
-  "Corvivienda",
-  "El Pedregal",
+  "Cacique Jacinto",
+  "Campestre Real",
+  "Ciudad Guabinas",
+  "Comfandi",
+  "Cruces",
+  "Dionisio",
+  "El Floral",
+  "Finlandia",
+  "Fray Peña",
+  "Gaitán",
   "Guacandá",
+  "Guadalupe",
   "Juan Pablo II",
-  "La Estancia",
-  "La Trinidad",
+  "La Ceiba",
   "Las Américas",
-  "Las Cruces",
+  "Las Vegas",
   "Lleras",
+  "Madrigal",
+  "Municipal",
+  "Nueva Estancia",
   "Nuevo Horizonte",
   "Panorama",
+  "Parques del Pinar",
+  "Pedregal",
+  "Pizarro",
+  "Portachuelo",
+  "Portales de Comfandi",
+  "Portales de Yumbo",
   "Puerto Isaacs",
+  "Riveras de Yumbo",
   "San Fernando",
   "San Jorge",
-  "Santa Inés",
-  "Uribe Uribe",
+  "San Marcos",
+  "Trinidad",
+  "Uribe",
+  "Vieja Estancia",
 ];
-
-/** Valor del selector cuando el barrio no está en la lista. */
-export const OTRO_BARRIO = "__otro__";

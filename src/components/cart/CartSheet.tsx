@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { BarrioPicker } from "@/components/cart/BarrioPicker";
 import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
-import { barrios, OTRO_BARRIO } from "@/data/barrios";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
 import { orderCartLink } from "@/lib/whatsapp";
@@ -21,7 +21,6 @@ export function CartSheet() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [barrio, setBarrio] = useState("");
-  const [otherBarrio, setOtherBarrio] = useState("");
   const [notes, setNotes] = useState("");
   const [payment, setPayment] = useState("");
   const [cash, setCash] = useState("");
@@ -32,7 +31,7 @@ export function CartSheet() {
     if (!isOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape" && !event.defaultPrevented) close();
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -67,7 +66,7 @@ export function CartSheet() {
       subtotal,
       name: name.trim(),
       address: address.trim(),
-      barrio: barrio === OTRO_BARRIO ? otherBarrio.trim() : barrio,
+      barrio,
       notes: notes.trim(),
       payment: method?.label ?? payment,
       cashAmount,
@@ -197,40 +196,12 @@ export function CartSheet() {
                 />
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className={label}>Barrio en {site.city}</span>
-                <select
-                  required
-                  value={barrio}
-                  onChange={(e) => setBarrio(e.target.value)}
-                  className={`${field} ${barrio ? "" : "text-cream-dim/60"}`}
-                >
-                  <option value="" disabled>
-                    Elige tu barrio
-                  </option>
-                  {barrios.map((item) => (
-                    <option key={item} value={item} className="text-cream">
-                      {item}
-                    </option>
-                  ))}
-                  <option value={OTRO_BARRIO} className="text-cream">
-                    Otro barrio…
-                  </option>
-                </select>
-              </label>
-
-              {barrio === OTRO_BARRIO && (
-                <label className="flex flex-col gap-2">
-                  <span className={label}>¿Cuál barrio?</span>
-                  <input
-                    required
-                    value={otherBarrio}
-                    onChange={(e) => setOtherBarrio(e.target.value)}
-                    placeholder="Escribe tu barrio"
-                    className={field}
-                  />
-                </label>
-              )}
+              <BarrioPicker
+                value={barrio}
+                onChange={setBarrio}
+                inputClassName={field}
+                label={<span className={label}>Barrio en {site.city}</span>}
+              />
 
               <label className="flex flex-col gap-2">
                 <span className={label}>Dirección</span>
