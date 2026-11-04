@@ -2,7 +2,6 @@ import Image from "next/image";
 import { site } from "@/config/site";
 import { pizzas } from "@/data/menu";
 import { formatPrice } from "@/lib/format";
-import { generalOrderLink } from "@/lib/whatsapp";
 
 export function Hero() {
   const cheapest = Math.min(...pizzas.map((p) => p.price));
@@ -35,7 +34,7 @@ export function Hero() {
 
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-cream-dim lg:mx-0 sm:text-lg">
             Sin local, sin filas: cocinamos solo para domicilio. Masa artesanal, ingredientes
-            frescos y combinaciones que solo encuentras aquí. Pídela por WhatsApp en un toque.
+            frescos y combinaciones que solo encuentras aquí. Arma tu pedido aquí mismo en un toque.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
@@ -43,15 +42,7 @@ export function Hero() {
               href="#menu"
               className="w-full rounded-full bg-grape-500 px-8 py-3.5 text-center font-semibold text-cream shadow-lg shadow-grape-700/40 transition-all hover:-translate-y-0.5 hover:bg-grape-400 sm:w-auto"
             >
-              Ver el menú
-            </a>
-            <a
-              href={generalOrderLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full rounded-full border border-cream/25 px-8 py-3.5 text-center font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300 sm:w-auto"
-            >
-              Pedir por WhatsApp
+              Hacer mi pedido
             </a>
           </div>
 

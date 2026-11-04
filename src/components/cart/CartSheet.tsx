@@ -3,17 +3,18 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BarrioPicker } from "@/components/cart/BarrioPicker";
+import { OrderReceipt } from "@/components/cart/OrderReceipt";
 import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
-import { orderCartLink } from "@/lib/whatsapp";
+import { createOrderRef, orderLink, type Order } from "@/lib/order";
 
 const field =
   "w-full rounded-2xl border border-grape-700/60 bg-ink-card px-4 py-3 text-sm text-cream placeholder:text-cream-dim/60 focus:border-basil-400 focus:outline-none";
 const label = "text-xs font-semibold uppercase tracking-widest text-cream-dim";
 
-/** Panel del pedido: pizzas, datos de entrega en Yumbo, pago y envío por WhatsApp. */
+/** Panel del pedido: pizzas, datos de entrega en Yumbo, pago y recibo con referencia. */
 export function CartSheet() {
   const { lines, count, subtotal, setQty, clear, isOpen, close } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -24,8 +25,8 @@ export function CartSheet() {
   const [notes, setNotes] = useState("");
   const [payment, setPayment] = useState("");
   const [cash, setCash] = useState("");
-  /** Enlace del pedido ya enviado; mientras exista se muestra la confirmación. */
-  const [sentLink, setSentLink] = useState<string | null>(null);
+  /** Pedido ya enviado; mientras exista se muestra el recibo. */
+  const [sent, setSent] = useState<Order | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -47,8 +48,13 @@ export function CartSheet() {
 
   // Si vacían el carrito sin haber enviado, se cierra solo
   useEffect(() => {
-    if (isOpen && count === 0 && !sentLink) close();
-  }, [isOpen, count, sentLink, close]);
+    if (isOpen && count === 0 && !sent) close();
+  }, [isOpen, count, sent, close]);
+
+  // El recibo es solo para el momento: al cerrar el panel desaparece
+  useEffect(() => {
+    if (!isOpen) setSent(null);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -58,32 +64,37 @@ export function CartSheet() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (cashTooLow) return;
-
     const method = site.payments.find((m) => m.id === payment);
-    const link = orderCartLink({
+    if (cashTooLow || !method) return;
+
+    const order: Order = {
+      ref: createOrderRef(),
       lines: lines.map((line) => ({ name: line.pizza.name, qty: line.qty, price: line.pizza.price })),
       subtotal,
       name: name.trim(),
       address: address.trim(),
       barrio,
       notes: notes.trim(),
-      payment: method?.label ?? payment,
+      payment: method,
       cashAmount,
-    });
+    };
+    const link = orderLink(order);
 
-    // Se abre en una pestaña nueva; si el navegador la bloquea, se va directo
-    const tab = window.open(link, "_blank", "noopener,noreferrer");
-    if (!tab) window.location.href = link;
-    setSentLink(link);
-  }
+    // Pestaña nueva para WhatsApp; la página se queda aquí con el recibo.
+    // (Con "noopener" window.open siempre devuelve null, por eso se corta a mano.)
+    const tab = window.open(link, "_blank");
+    if (tab) tab.opener = null;
+    else window.location.href = link;
 
-  function finish() {
+    // El pedido ya salió: carrito y formulario quedan limpios para la próxima
     clear();
-    setSentLink(null);
+    setName("");
+    setAddress("");
+    setBarrio("");
     setNotes("");
+    setPayment("");
     setCash("");
-    close();
+    setSent(order);
   }
 
   return (
@@ -108,39 +119,8 @@ export function CartSheet() {
           ×
         </button>
 
-        {sentLink ? (
-          <div className="flex flex-col items-center p-8 text-center sm:p-10">
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-basil-400">Casi listo</span>
-            <h2 id="pedido-titulo" className="font-display mt-2 text-4xl text-cream">
-              ¡Pedido armado!
-            </h2>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-cream-dim">
-              Abrimos WhatsApp con tu pedido completo. Solo dale <strong className="text-cream">enviar</strong> y te
-              confirmamos el valor del domicilio y el tiempo de entrega.
-            </p>
-            <a
-              href={sentLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-7 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
-            >
-              Abrir WhatsApp otra vez
-            </a>
-            <button
-              type="button"
-              onClick={finish}
-              className="mt-3 w-full rounded-full border border-grape-600/60 px-6 py-3.5 font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
-            >
-              Ya lo envié, empezar otro pedido
-            </button>
-            <button
-              type="button"
-              onClick={() => setSentLink(null)}
-              className="mt-4 text-sm text-cream-dim underline underline-offset-4 hover:text-basil-300"
-            >
-              Volver y cambiar algo
-            </button>
-          </div>
+        {sent ? (
+          <OrderReceipt order={sent} onDone={close} />
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col p-6 sm:p-8">
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-basil-400">
@@ -179,7 +159,7 @@ export function CartSheet() {
               <span className="text-sm text-cream-dim">Total pizzas</span>
               <span className="font-display text-3xl text-basil-300">{formatPrice(subtotal)}</span>
             </div>
-            <p className="mt-1 text-right text-xs text-cream-dim">El domicilio te lo confirmamos por WhatsApp.</p>
+            <p className="mt-1 text-right text-xs text-cream-dim">+ domicilio, te lo confirmamos al recibir el pedido.</p>
 
             <fieldset className="mt-8 flex flex-col gap-4">
               <legend className="font-display mb-4 text-2xl text-cream">¿A dónde lo llevamos?</legend>
@@ -295,8 +275,11 @@ export function CartSheet() {
               type="submit"
               className="mt-8 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
             >
-              Enviar pedido por WhatsApp
+              Confirmar pedido
             </button>
+            <p className="mt-3 text-center text-xs text-cream-dim">
+              Te mostramos el recibo con la referencia y se abre WhatsApp con el pedido listo para enviar.
+            </p>
           </form>
         )}
       </div>
