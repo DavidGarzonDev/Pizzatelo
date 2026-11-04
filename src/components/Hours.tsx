@@ -1,5 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { site } from "@/config/site";
+import { directOrderLink } from "@/lib/whatsapp";
 
 export function Hours() {
   return (
@@ -31,16 +33,28 @@ export function Hours() {
             <Reveal delay={100} className="flex flex-col justify-center">
               <h3 className="font-display text-3xl text-cream">¿Listo para pedir?</h3>
               <p className="mt-3 text-sm leading-relaxed text-cream-dim">
-                Elige tus pizzas en el menú, busca tu barrio y confirma. Te damos un recibo con la
-                referencia del pedido y los datos para pagar.
+                Registra tu pedido fácilmente: elige tus pizzas, busca tu barrio y confirma. Te damos
+                un recibo con la referencia y los datos para pagar. ¿Prefieres escribirnos? También
+                puedes pedir directo por WhatsApp.
               </p>
 
-              <a
-                href="#menu"
-                className="mt-7 inline-flex items-center justify-center gap-2 self-start rounded-full bg-basil-500 px-7 py-3.5 font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-basil-400"
-              >
-                Hacer mi pedido
-              </a>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href="#menu"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-basil-500 px-7 py-3.5 font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-basil-400"
+                >
+                  Hacer mi pedido
+                </a>
+                <a
+                  href={directOrderLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-cream/25 font-semibold text-cream transition-all hover:-translate-y-0.5 hover:border-basil-400 hover:text-basil-300 px-7 py-3.5"
+                >
+                  <WhatsAppIcon />
+                  Pedir por WhatsApp
+                </a>
+              </div>
 
               <p className="mt-5 text-sm text-cream-dim">
                 O llámanos al{" "}
