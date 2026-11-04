@@ -6,7 +6,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-grape-700/40 bg-ink-soft">
-      {/* pb extra en móvil: deja al botón flotante de WhatsApp una zona libre abajo */}
+      {/* pb extra en móvil: deja a la barra flotante del pedido una zona libre abajo */}
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 pb-28 pt-12 text-center sm:px-6 sm:pb-12">
         <Image
           src="/images/logo.png"

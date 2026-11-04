@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { site } from "@/config/site";
-import { generalOrderLink } from "@/lib/whatsapp";
+import { useCart } from "@/lib/cart";
 
 const links = [
   { href: "#menu", label: "Menú" },
@@ -14,6 +14,16 @@ const links = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const cart = useCart();
+
+  // "Pedir" lleva al menú; si ya hay pizzas en el carrito, abre el pedido
+  const goToOrder = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    setOpen(false);
+    if (cart.count > 0) {
+      event.preventDefault();
+      cart.open();
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -57,9 +67,8 @@ export function Header() {
             </a>
           ))}
           <a
-            href={generalOrderLink()}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#menu"
+            onClick={goToOrder}
             className="ml-2 rounded-full bg-basil-500 px-5 py-2 text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
           >
             Pedir ahora
@@ -112,13 +121,11 @@ export function Header() {
             </a>
           ))}
           <a
-            href={generalOrderLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
+            href="#menu"
+            onClick={goToOrder}
             className="mt-1 rounded-xl bg-basil-500 px-3 py-3 text-center text-sm font-semibold text-ink"
           >
-            Pedir por WhatsApp
+            Hacer mi pedido
           </a>
         </nav>
       </div>

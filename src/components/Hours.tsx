@@ -1,6 +1,5 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/config/site";
-import { generalOrderLink } from "@/lib/whatsapp";
 
 export function Hours() {
   return (
@@ -32,17 +31,15 @@ export function Hours() {
             <Reveal delay={100} className="flex flex-col justify-center">
               <h3 className="font-display text-3xl text-cream">¿Listo para pedir?</h3>
               <p className="mt-3 text-sm leading-relaxed text-cream-dim">
-                Escríbenos por WhatsApp con la pizza que quieres y tu dirección. Te confirmamos el
-                tiempo de entrega al instante.
+                Elige tus pizzas en el menú, busca tu barrio y confirma. Te damos un recibo con la
+                referencia del pedido y los datos para pagar.
               </p>
 
               <a
-                href={generalOrderLink()}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#menu"
                 className="mt-7 inline-flex items-center justify-center gap-2 self-start rounded-full bg-basil-500 px-7 py-3.5 font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-basil-400"
               >
-                Escribir por WhatsApp
+                Hacer mi pedido
               </a>
 
               <p className="mt-5 text-sm text-cream-dim">

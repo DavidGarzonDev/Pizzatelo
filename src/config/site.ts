@@ -7,7 +7,7 @@ export const site = {
   city: "Yumbo",
   tagline: "Pizza artesanal de cocina oculta",
   description:
-    "Menú de Pizzatelo Yumbo: pizzas artesanales horneadas al momento. Pepperoni, Hawaiana, Samba, Pollo Champiñones y nuestra Especial. Pide por WhatsApp.",
+    "Menú de Pizzatelo Yumbo: pizzas artesanales horneadas al momento. Pepperoni, Hawaiana, Samba, Pollo Champiñones y nuestra Especial. Haz tu pedido a domicilio en Yumbo.",
   url: "https://pizzatelo-menu.vercel.app",
 
   /** Número que recibe los pedidos, en formato internacional sin signos. */
