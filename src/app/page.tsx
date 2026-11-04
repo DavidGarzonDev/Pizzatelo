@@ -1,3 +1,5 @@
+import { CartBar } from "@/components/cart/CartBar";
+import { CartSheet } from "@/components/cart/CartSheet";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
@@ -7,6 +9,7 @@ import { Payments } from "@/components/Payments";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { site } from "@/config/site";
 import { pizzas } from "@/data/menu";
+import { CartProvider } from "@/lib/cart";
 
 /** Datos estructurados para que Google muestre el menú en los resultados. */
 function StructuredData() {
@@ -50,7 +53,7 @@ function StructuredData() {
 
 export default function Home() {
   return (
-    <>
+    <CartProvider>
       <StructuredData />
       <Header />
       <main>
@@ -61,6 +64,8 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppFab />
-    </>
+      <CartBar />
+      <CartSheet />
+    </CartProvider>
   );
 }

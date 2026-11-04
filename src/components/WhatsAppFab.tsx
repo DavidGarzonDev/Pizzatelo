@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useCart } from "@/lib/cart";
 import { generalOrderLink } from "@/lib/whatsapp";
 
-/** Botón flotante que aparece una vez el visitante pasa el hero. */
+/** Botón flotante que aparece una vez el visitante pasa el hero (si no hay pedido en curso). */
 export function WhatsAppFab() {
-  const [visible, setVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  // Con pizzas en el carrito, la barra del pedido ocupa este lugar
+  const { count } = useCart();
+  const visible = scrolled && count === 0;
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 520);
+    const onScroll = () => setScrolled(window.scrollY > 520);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
