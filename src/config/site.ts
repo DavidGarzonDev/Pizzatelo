@@ -57,6 +57,16 @@ export const site = {
     },
   ],
 
+  /**
+   * Tienda en Ñami (app de domicilios). El cliente arma el pedido completo allá.
+   * El dominio real es ñami.app; se escribe en punycode para que funcione en
+   * cualquier navegador y app que abra el enlace.
+   */
+  nami: {
+    label: "Ñami",
+    url: "https://www.xn--ami-6ma.app/la-pizzeria",
+  },
+
   social: {
     instagram: "https://www.instagram.com/_pizzatelo",
   },
