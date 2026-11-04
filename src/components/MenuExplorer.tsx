@@ -5,6 +5,7 @@ import { PizzaCard } from "@/components/PizzaCard";
 import { PizzaDialog } from "@/components/PizzaDialog";
 import { Reveal } from "@/components/ui/Reveal";
 import { categories, pizzas } from "@/data/menu";
+import { normalize } from "@/lib/text";
 import type { CategoryId, Pizza } from "@/types/menu";
 
 type Filter = CategoryId | "todas";
@@ -13,14 +14,6 @@ const filters: { id: Filter; label: string; blurb: string }[] = [
   { id: "todas", label: "Todas", blurb: "Todo nuestro menú, de la clásica a la más cargada." },
   ...categories.map((c) => ({ id: c.id as Filter, label: c.label, blurb: c.blurb })),
 ];
-
-/** Normaliza texto para buscar sin acentos ni mayúsculas. */
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
 
 export function MenuExplorer() {
   const [filter, setFilter] = useState<Filter>("todas");
