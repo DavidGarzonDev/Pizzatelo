@@ -6,6 +6,7 @@ import { Hero } from "@/components/Hero";
 import { Hours } from "@/components/Hours";
 import { MenuExplorer } from "@/components/MenuExplorer";
 import { Payments } from "@/components/Payments";
+import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { site } from "@/config/site";
 import { pizzas } from "@/data/menu";
 import { CartProvider } from "@/lib/cart";
@@ -62,6 +63,7 @@ export default function Home() {
         <Hours />
       </main>
       <Footer />
+      <WhatsAppFab />
       <CartBar />
       <CartSheet />
     </CartProvider>
