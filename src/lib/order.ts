@@ -8,6 +8,8 @@ export interface Order {
   ref: string;
   lines: { name: string; qty: number; price: number }[];
   subtotal: number;
+  /** Valor del domicilio según el barrio; null si se confirma por WhatsApp. */
+  deliveryFee: number | null;
   name: string;
   address: string;
   barrio: string;
@@ -39,9 +41,15 @@ export function createOrderRef(date = new Date()): string {
   return `PZT-${month}${day}-${code}`;
 }
 
-/** Cuánto hay que pagar, en texto: el domicilio lo confirma el negocio. */
+/** Pizzas + domicilio; null si el domicilio está por confirmar. */
+export function orderTotal(order: Pick<Order, "subtotal" | "deliveryFee">): number | null {
+  return order.deliveryFee === null ? null : order.subtotal + order.deliveryFee;
+}
+
+/** Cuánto hay que pagar, en texto. Sin precio de domicilio, se aclara que falta sumarlo. */
 export function amountToPay(order: Order): string {
-  return `${formatPrice(order.subtotal)} + domicilio`;
+  const total = orderTotal(order);
+  return total === null ? `${formatPrice(order.subtotal)} + domicilio` : formatPrice(total);
 }
 
 /** Instrucciones de pago en una línea, para el mensaje de WhatsApp. */
@@ -70,8 +78,11 @@ export function orderMessage(order: Order): string {
     "",
     items,
     "",
-    `*Total pizzas:* ${formatPrice(order.subtotal)}`,
-    "_(+ domicilio, me lo confirman)_",
+    `*Pizzas:* ${formatPrice(order.subtotal)}`,
+    order.deliveryFee === null
+      ? "*Domicilio:* por confirmar"
+      : `*Domicilio:* ${formatPrice(order.deliveryFee)}`,
+    `*Total a pagar:* ${amountToPay(order)}`,
     "",
     `*Nombre:* ${order.name}`,
     `*Dirección:* ${order.address}`,
