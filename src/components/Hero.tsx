@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { site } from "@/config/site";
 import { pizzas } from "@/data/menu";
+import { StoreStatusBadge } from "@/components/StoreStatusBadge";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { formatPrice } from "@/lib/format";
 import { directOrderLink } from "@/lib/whatsapp";
@@ -39,7 +40,9 @@ export function Hero() {
             frescos y combinaciones que solo encuentras aquí.
           </p>
 
-          <p className="mt-8 text-sm font-semibold text-basil-300">
+          <StoreStatusBadge className="mt-7" />
+
+          <p className="mt-4 text-sm font-semibold text-basil-300">
             Registra tu pedido fácilmente aquí, o escríbenos directo.
           </p>
 
