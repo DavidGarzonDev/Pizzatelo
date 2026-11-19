@@ -1,3 +1,4 @@
+import { StoreStatusBadge } from "@/components/StoreStatusBadge";
 import { Reveal } from "@/components/ui/Reveal";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { site } from "@/config/site";
@@ -11,11 +12,12 @@ export function Hours() {
           <div className="grid gap-10 p-8 sm:p-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-basil-400">
-                Estamos abiertos
+                Atendemos a domicilio
               </p>
               <h2 className="font-display text-brand-gradient mt-3 text-[clamp(2.25rem,6vw,3.25rem)] leading-none">
                 Horarios
               </h2>
+              <StoreStatusBadge className="mt-5" />
 
               <dl className="mt-8 space-y-4">
                 {site.hours.map((slot) => (

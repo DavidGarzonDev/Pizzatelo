@@ -42,8 +42,8 @@ export function OrderReceipt({ order, onDone }: OrderReceiptProps) {
         Tu recibo
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-cream-dim">
-        Abrimos WhatsApp con tu pedido. Dale <strong className="text-cream">enviar</strong> y te confirmamos el
-        tiempo de entrega.
+        Abrimos WhatsApp con tu pedido. Dale <strong className="text-cream">enviar</strong> y te confirmamos
+        {order.scheduled ? " que queda programado." : " el tiempo de entrega."}
       </p>
 
       <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-basil-500/40 bg-basil-500/10 p-4">
@@ -81,7 +81,14 @@ export function OrderReceipt({ order, onDone }: OrderReceiptProps) {
         <span className="text-cream">
           {order.address}, {order.barrio}
         </span>
-        .
+        .{" "}
+        {order.scheduled ? (
+          <>
+            Programado para <span className="font-semibold text-cream">{order.when.toLowerCase()}</span>.
+          </>
+        ) : (
+          "Lo antes posible."
+        )}
       </p>
 
       <div className="mt-6 rounded-2xl border border-grape-700/45 bg-ink-card/60 p-4">

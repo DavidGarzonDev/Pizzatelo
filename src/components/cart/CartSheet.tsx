@@ -9,7 +9,9 @@ import { site } from "@/config/site";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
 import { deliveryFee } from "@/data/barrios";
+import { ASAP, deliverySlots, storeStatus } from "@/lib/hours";
 import { createOrderRef, orderLink, type Order } from "@/lib/order";
+import { useNow } from "@/lib/useStoreStatus";
 
 const field =
   "w-full rounded-2xl border border-grape-700/60 bg-ink-card px-4 py-3 text-sm text-cream placeholder:text-cream-dim/60 focus:border-basil-400 focus:outline-none";
@@ -26,6 +28,8 @@ export function CartSheet() {
   const [notes, setNotes] = useState("");
   const [payment, setPayment] = useState("");
   const [cash, setCash] = useState("");
+  const [when, setWhen] = useState("");
+  const now = useNow();
   /** Pedido ya enviado; mientras exista se muestra el recibo. */
   const [sent, setSent] = useState<Order | null>(null);
 
@@ -59,6 +63,12 @@ export function CartSheet() {
 
   if (!isOpen) return null;
 
+  // Abiertos: "lo antes posible" por defecto. Cerrados: hay que elegir hora de la próxima apertura.
+  const status = now ? storeStatus(now) : null;
+  const slots = now ? deliverySlots(now) : [];
+  const chosenSlot =
+    slots.find((s) => s.value === when) ?? (status?.open ? slots.find((s) => s.value === ASAP) : undefined);
+
   const isCash = payment === "efectivo";
   const cashAmount = isCash ? Number(cash.replace(/\D/g, "")) || null : null;
   // El domicilio sale del barrio elegido; sin barrio (o sin precio) queda por confirmar
@@ -69,13 +79,15 @@ export function CartSheet() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const method = site.payments.find((m) => m.id === payment);
-    if (cashTooLow || !method) return;
+    if (cashTooLow || !method || !chosenSlot) return;
 
     const order: Order = {
       ref: createOrderRef(),
       lines: lines.map((line) => ({ name: line.pizza.name, qty: line.qty, price: line.pizza.price })),
       subtotal,
       deliveryFee: fee,
+      when: chosenSlot.label,
+      scheduled: chosenSlot.value !== ASAP,
       name: name.trim(),
       address: address.trim(),
       barrio,
@@ -99,6 +111,7 @@ export function CartSheet() {
     setNotes("");
     setPayment("");
     setCash("");
+    setWhen("");
     setSent(order);
   }
 
@@ -134,6 +147,13 @@ export function CartSheet() {
             <h2 id="pedido-titulo" className="font-display mt-2 text-4xl text-cream">
               Tu pedido
             </h2>
+
+            {status && !status.open && (
+              <p className="mt-4 rounded-2xl border border-crust/40 bg-crust/10 p-4 text-sm leading-relaxed text-cream-dim">
+                <span className="font-semibold text-crust">Ahora estamos cerrados.</span> Abrimos {status.opensDay} a
+                las {status.opensAt}: deja tu pedido programado y te lo llevamos a la hora que elijas.
+              </p>
+            )}
 
             <ul className="mt-6 flex flex-col gap-3">
               {lines.map(({ pizza, qty }) => (
@@ -223,6 +243,27 @@ export function CartSheet() {
                   placeholder="Punto de referencia, apartamento, sin cebolla…"
                   className={`${field} resize-none`}
                 />
+              </label>
+
+              <label className="flex flex-col gap-2">
+                <span className={label}>{status?.open ? "¿Cuándo lo quieres?" : "¿Para qué hora?"}</span>
+                <select
+                  required
+                  value={chosenSlot?.value ?? ""}
+                  onChange={(e) => setWhen(e.target.value)}
+                  className={`${field} ${chosenSlot ? "" : "text-cream-dim/60"}`}
+                >
+                  {!chosenSlot && (
+                    <option value="" disabled>
+                      Elige la hora de entrega
+                    </option>
+                  )}
+                  {slots.map((slot) => (
+                    <option key={slot.value} value={slot.value} className="text-cream">
+                      {slot.label}
+                    </option>
+                  ))}
+                </select>
               </label>
             </fieldset>
 

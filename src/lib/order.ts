@@ -15,6 +15,10 @@ export interface Order {
   barrio: string;
   notes: string;
   payment: PaymentMethod;
+  /** Cuándo lo quiere: "Lo antes posible" o una hora programada ("Mañana 5:00 p.m."). */
+  when: string;
+  /** true si el pedido es para más tarde (se hizo con el local cerrado o eligió hora). */
+  scheduled: boolean;
   /** Con cuánto paga en efectivo, para llevar la devuelta. */
   cashAmount: number | null;
 }
@@ -89,6 +93,7 @@ export function orderMessage(order: Order): string {
     `*Barrio:* ${order.barrio}, ${site.city}`,
   ];
   if (order.notes) lines.push(`*Indicaciones:* ${order.notes}`);
+  lines.push(order.scheduled ? `🕒 *Entrega programada:* ${order.when}` : `*Entrega:* ${order.when}`);
   lines.push("", paymentLine(order));
 
   return lines.join("\n");
