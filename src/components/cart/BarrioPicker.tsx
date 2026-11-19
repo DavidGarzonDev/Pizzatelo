@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useRef, useState } from "react";
 import { barrios } from "@/data/barrios";
+import { formatPrice } from "@/lib/format";
 import { normalize } from "@/lib/text";
 
 interface BarrioPickerProps {
@@ -29,13 +30,13 @@ export function BarrioPicker({ value, onChange, inputClassName, label }: BarrioP
 
   const term = normalize(query.trim());
   const matches = useMemo(
-    () => (term ? barrios.filter((b) => normalize(b).includes(term)) : barrios),
+    () => (term ? barrios.filter((b) => normalize(b.name).includes(term)) : barrios),
     [term],
   );
 
   // Si lo escrito no coincide con ningún barrio, se ofrece usarlo tal cual
   const typed = query.trim();
-  const options = typed && matches.length === 0 ? [typed] : matches;
+  const options = typed && matches.length === 0 ? [{ name: typed, fee: null }] : matches;
   const customIndex = typed && matches.length === 0 ? 0 : -1;
 
   function choose(barrio: string) {
@@ -64,7 +65,7 @@ export function BarrioPicker({ value, onChange, inputClassName, label }: BarrioP
       setActive((i) => Math.max(i - 1, 0));
     } else if (event.key === "Enter" && open && options[active]) {
       event.preventDefault();
-      choose(options[active]);
+      choose(options[active].name);
     } else if (event.key === "Escape" && open) {
       // Cierra la lista sin cerrar todo el pedido (el panel ignora el Escape ya atendido)
       event.preventDefault();
@@ -130,27 +131,34 @@ export function BarrioPicker({ value, onChange, inputClassName, label }: BarrioP
             const highlighted = index === active;
             return (
               <li
-                key={isCustom ? "__escrito__" : option}
+                key={isCustom ? "__escrito__" : option.name}
                 id={`${listId}-${index}`}
                 role="option"
-                aria-selected={option === value}
+                aria-selected={option.name === value}
                 // mousedown en vez de click: elige antes de que el campo pierda el foco
                 onMouseDown={(e) => {
                   e.preventDefault();
-                  choose(option);
+                  choose(option.name);
                 }}
                 onMouseEnter={() => setActive(index)}
-                className={`cursor-pointer rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                   highlighted ? "bg-grape-600/50 text-cream" : "text-cream-dim"
                 }`}
               >
                 {isCustom ? (
-                  <>
-                    Usar <span className="font-semibold text-cream">«{option}»</span>
-                    <span className="block text-xs text-cream-dim/70">Mi barrio no está en la lista</span>
-                  </>
+                  <span>
+                    Usar <span className="font-semibold text-cream">«{option.name}»</span>
+                    <span className="block text-xs text-cream-dim/70">
+                      Mi barrio no está en la lista · domicilio por confirmar
+                    </span>
+                  </span>
                 ) : (
-                  option
+                  <>
+                    <span>{option.name}</span>
+                    <span className="shrink-0 text-xs font-semibold text-basil-300">
+                      {option.fee !== null ? formatPrice(option.fee) : "Por confirmar"}
+                    </span>
+                  </>
                 )}
               </li>
             );

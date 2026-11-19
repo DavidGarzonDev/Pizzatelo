@@ -43,7 +43,7 @@ export function OrderReceipt({ order, onDone }: OrderReceiptProps) {
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-cream-dim">
         Abrimos WhatsApp con tu pedido. Dale <strong className="text-cream">enviar</strong> y te confirmamos el
-        domicilio y el tiempo de entrega.
+        tiempo de entrega.
       </p>
 
       <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-basil-500/40 bg-basil-500/10 p-4">
@@ -64,11 +64,17 @@ export function OrderReceipt({ order, onDone }: OrderReceiptProps) {
           </li>
         ))}
       </ul>
-      <div className="mt-3 flex items-baseline justify-between border-t border-grape-700/50 pt-3">
-        <span className="text-sm text-cream-dim">Total pizzas</span>
-        <span className="font-display text-2xl text-basil-300">{formatPrice(order.subtotal)}</span>
+      <div className="mt-2 flex justify-between gap-3 text-sm text-cream-dim">
+        <span>Domicilio a {order.barrio}</span>
+        <span>{order.deliveryFee === null ? "Por confirmar" : formatPrice(order.deliveryFee)}</span>
       </div>
-      <p className="mt-1 text-right text-xs text-cream-dim">+ domicilio, te lo confirmamos.</p>
+      <div className="mt-3 flex items-baseline justify-between border-t border-grape-700/50 pt-3">
+        <span className="text-sm text-cream-dim">Total a pagar</span>
+        <span className="font-display text-2xl text-basil-300">{amountToPay(order)}</span>
+      </div>
+      {order.deliveryFee === null && (
+        <p className="mt-1 text-right text-xs text-cream-dim">El valor del domicilio te lo confirmamos por WhatsApp.</p>
+      )}
 
       <p className="mt-4 text-sm text-cream-dim">
         Entrega a <span className="text-cream">{order.name}</span> en{" "}

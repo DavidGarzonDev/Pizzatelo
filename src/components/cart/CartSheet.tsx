@@ -8,6 +8,7 @@ import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
+import { deliveryFee } from "@/data/barrios";
 import { createOrderRef, orderLink, type Order } from "@/lib/order";
 
 const field =
@@ -60,7 +61,10 @@ export function CartSheet() {
 
   const isCash = payment === "efectivo";
   const cashAmount = isCash ? Number(cash.replace(/\D/g, "")) || null : null;
-  const cashTooLow = cashAmount !== null && cashAmount < subtotal;
+  // El domicilio sale del barrio elegido; sin barrio (o sin precio) queda por confirmar
+  const fee = barrio ? deliveryFee(barrio) : null;
+  const total = subtotal + (fee ?? 0);
+  const cashTooLow = cashAmount !== null && cashAmount < total;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -71,6 +75,7 @@ export function CartSheet() {
       ref: createOrderRef(),
       lines: lines.map((line) => ({ name: line.pizza.name, qty: line.qty, price: line.pizza.price })),
       subtotal,
+      deliveryFee: fee,
       name: name.trim(),
       address: address.trim(),
       barrio,
@@ -155,11 +160,23 @@ export function CartSheet() {
               ))}
             </ul>
 
-            <div className="mt-5 flex items-baseline justify-between border-t border-grape-700/50 pt-4">
-              <span className="text-sm text-cream-dim">Total pizzas</span>
-              <span className="font-display text-3xl text-basil-300">{formatPrice(subtotal)}</span>
-            </div>
-            <p className="mt-1 text-right text-xs text-cream-dim">+ domicilio, te lo confirmamos al recibir el pedido.</p>
+            <dl className="mt-5 flex flex-col gap-1.5 border-t border-grape-700/50 pt-4 text-sm text-cream-dim">
+              <div className="flex justify-between gap-3">
+                <dt>Pizzas</dt>
+                <dd>{formatPrice(subtotal)}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt>Domicilio{barrio ? ` a ${barrio}` : ""}</dt>
+                <dd>{!barrio ? "Elige tu barrio" : fee === null ? "Por confirmar" : formatPrice(fee)}</dd>
+              </div>
+              <div className="mt-1 flex items-baseline justify-between gap-3">
+                <dt>Total</dt>
+                <dd className="font-display text-3xl text-basil-300">
+                  {formatPrice(total)}
+                  {barrio && fee === null ? <span className="text-base"> + domicilio</span> : null}
+                </dd>
+              </div>
+            </dl>
 
             <fieldset className="mt-8 flex flex-col gap-4">
               <legend className="font-display mb-4 text-2xl text-cream">¿A dónde lo llevamos?</legend>
@@ -260,20 +277,28 @@ export function CartSheet() {
                       const digits = e.target.value.replace(/\D/g, "");
                       setCash(digits ? formatPrice(Number(digits)) : "");
                     }}
-                    placeholder={`Ej: ${formatPrice(Math.ceil(subtotal / 50000) * 50000 || 50000)}`}
+                    placeholder={`Ej: ${formatPrice(Math.ceil(total / 50000) * 50000 || 50000)}`}
                     className={field}
                     aria-invalid={cashTooLow}
                   />
                   {cashTooLow && (
-                    <span className="text-xs text-crust">Debe ser igual o mayor al total ({formatPrice(subtotal)}).</span>
+                    <span className="text-xs text-crust">Debe ser igual o mayor al total ({formatPrice(total)}).</span>
                   )}
                 </label>
               )}
             </fieldset>
 
+            <div className="mt-8 flex items-baseline justify-between border-t border-grape-700/50 pt-4">
+              <span className="text-sm text-cream-dim">{barrio ? "Total a pagar" : "Total sin domicilio"}</span>
+              <span className="font-display text-2xl text-basil-300">
+                {formatPrice(total)}
+                {barrio && fee === null ? <span className="text-sm"> + domicilio</span> : null}
+              </span>
+            </div>
+
             <button
               type="submit"
-              className="mt-8 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
+              className="mt-4 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
             >
               Confirmar pedido
             </button>
