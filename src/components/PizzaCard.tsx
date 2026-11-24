@@ -1,6 +1,9 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import Image from "next/image";
+import { useState } from "react";
 import { QtyStepper } from "@/components/cart/QtyStepper";
 import { site } from "@/config/site";
 import { formatPrice } from "@/lib/format";
@@ -15,6 +18,9 @@ interface PizzaCardProps {
 export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
   const { qtyOf, add, setQty } = useCart();
   const qty = qtyOf(pizza.slug);
+  // Cada vez que se suma una pizza sale un "+1" flotando; se borra al terminar
+  const [pops, setPops] = useState<number[]>([]);
+  const pop = () => setPops((list) => [...list, Date.now()]);
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-grape-700/45 bg-ink-card transition-all duration-300 hover:-translate-y-1.5 hover:border-grape-400/70 hover:shadow-[0_24px_60px_-18px_rgba(123,58,158,0.65)]">
@@ -36,7 +42,7 @@ export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
           alt={`Pizza ${pizza.name}`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.07]"
+          className="object-cover transition-transform duration-700 ease-out group-hover:rotate-[8deg] group-hover:scale-[1.08]"
         />
         <span
           aria-hidden="true"
@@ -87,18 +93,60 @@ export function PizzaCard({ pizza, onOpen }: PizzaCardProps) {
         </ul>
 
         {/* mt-auto deja el botón al fondo aunque las tarjetas tengan textos de distinto largo */}
-        <div className="mt-auto pt-5">
-          {qty > 0 ? (
-            <QtyStepper qty={qty} name={pizza.name} onChange={(value) => setQty(pizza.slug, value)} />
-          ) : (
-            <button
-              type="button"
-              onClick={() => add(pizza.slug)}
-              className="block w-full rounded-full bg-basil-500 px-4 py-2.5 text-center text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
-            >
-              Agregar al pedido
-            </button>
-          )}
+        <div className="relative mt-auto pt-5">
+          <AnimatePresence mode="wait" initial={false}>
+            {qty > 0 ? (
+              <m.div
+                key="stepper"
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.18 }}
+              >
+                <QtyStepper
+                  qty={qty}
+                  name={pizza.name}
+                  onChange={(value) => {
+                    if (value > qty) pop();
+                    setQty(pizza.slug, value);
+                  }}
+                />
+              </m.div>
+            ) : (
+              <m.button
+                key="add"
+                type="button"
+                onClick={() => {
+                  pop();
+                  add(pizza.slug);
+                }}
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.18 }}
+                className="block w-full rounded-full bg-basil-500 px-4 py-2.5 text-center text-sm font-semibold text-ink transition-colors hover:bg-basil-400"
+              >
+                Agregar al pedido
+              </m.button>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {pops.map((id) => (
+              <m.span
+                key={id}
+                aria-hidden="true"
+                initial={{ opacity: 0, y: 0, scale: 0.6 }}
+                animate={{ opacity: [0, 1, 0], y: -48, scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                onAnimationComplete={() => setPops((list) => list.filter((p) => p !== id))}
+                className="font-display pointer-events-none absolute left-1/2 top-3 -ml-5 w-10 text-center text-xl text-basil-300"
+              >
+                +1
+              </m.span>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </article>

@@ -1,5 +1,7 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { useMemo, useState } from "react";
 import { PizzaCard } from "@/components/PizzaCard";
 import { PizzaDialog } from "@/components/PizzaDialog";
@@ -61,12 +63,21 @@ export function MenuExplorer() {
                     role="tab"
                     aria-selected={active}
                     onClick={() => setFilter(item.id)}
-                    className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
+                    className={`relative isolate rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors ${
                       active
-                        ? "bg-grape-500 text-cream shadow-lg shadow-grape-700/40"
-                        : "border border-grape-700/60 text-cream-dim hover:border-grape-400/70 hover:text-cream"
+                        ? "border-transparent text-cream"
+                        : "border-grape-700/60 text-cream-dim hover:border-grape-400/70 hover:text-cream"
                     }`}
                   >
+                    {/* La píldora morada se desliza hasta la categoría elegida */}
+                    {active && (
+                      <m.span
+                        layoutId="filtro-activo"
+                        aria-hidden="true"
+                        className="absolute inset-0 -z-10 rounded-full bg-grape-500 shadow-lg shadow-grape-700/40"
+                        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      />
+                    )}
                     {item.label}
                     <span className={`ml-2 text-xs ${active ? "text-cream/70" : "text-cream-dim/70"}`}>
                       {counts[item.id]}
@@ -94,11 +105,28 @@ export function MenuExplorer() {
 
         {visible.length > 0 ? (
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.map((pizza, index) => (
-              <Reveal as="li" key={pizza.slug} delay={index * 70} className="h-full">
-                <PizzaCard pizza={pizza} onOpen={setSelected} />
-              </Reveal>
-            ))}
+            {/* Al filtrar, las tarjetas que quedan se reacomodan y las demás se desvanecen */}
+            <AnimatePresence mode="popLayout">
+              {visible.map((pizza, index) => (
+                <m.li
+                  key={pizza.slug}
+                  layout
+                  initial={{ opacity: 0, y: 32, scale: 0.98 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+                  exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.2 } }}
+                  transition={{
+                    duration: 0.7,
+                    delay: index * 0.07,
+                    ease: [0.22, 1, 0.36, 1],
+                    layout: { type: "spring", stiffness: 350, damping: 32 },
+                  }}
+                  className="h-full"
+                >
+                  <PizzaCard pizza={pizza} onOpen={setSelected} />
+                </m.li>
+              ))}
+            </AnimatePresence>
           </ul>
         ) : (
           <p className="mt-16 text-center text-cream-dim">
