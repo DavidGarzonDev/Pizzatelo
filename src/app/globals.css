@@ -32,6 +32,69 @@
   --animate-pop: pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade: fade 0.25s ease-out both;
   --animate-drift: drift 18s ease-in-out infinite;
+
+  /* Motion graphics */
+  --animate-line-up: line-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-spin-slower: spin 70s linear infinite reverse;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-ember: ember 5s ease-in infinite;
+  --animate-shine: shine 4.5s ease-in-out infinite;
+}
+
+/* Título: cada línea sube desde detrás de una máscara */
+@keyframes line-up {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Logo flotando suave */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(-1.5deg);
+  }
+}
+
+/* Cinta de textos que corre sin fin (el contenido va duplicado) */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Chispas que suben del horno */
+@keyframes ember {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--ember-x, 0px), -220px, 0) scale(1.1);
+  }
+}
+
+/* Brillo que cruza el botón principal cada tanto */
+@keyframes shine {
+  0%,
+  60% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+  }
 }
 
 @keyframes rise {
@@ -132,13 +195,34 @@
 /* Elemento que aparece al entrar en pantalla (ver useReveal) */
 @utility reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(32px) scale(0.98);
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @utility reveal-in {
   opacity: 1;
   transform: none;
+}
+
+/* Destello diagonal (botón principal y fotos al pasar el mouse) */
+@utility shine-sweep {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
+    animation: var(--animate-shine);
+    pointer-events: none;
+  }
+}
+
+/* Barra de progreso de lectura bajo el header */
+@utility scroll-progress {
+  transform-origin: left center;
+  background-image: linear-gradient(90deg, var(--color-grape-400), var(--color-basil-400));
 }

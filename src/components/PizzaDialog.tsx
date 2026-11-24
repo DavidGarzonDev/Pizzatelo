@@ -1,5 +1,7 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { QtyStepper } from "@/components/cart/QtyStepper";
@@ -36,123 +38,134 @@ export function PizzaDialog({ pizza, onClose }: PizzaDialogProps) {
     };
   }, [pizza, onClose]);
 
-  if (!pizza) return null;
-
   return (
-    <div
-      className="animate-fade fixed inset-0 z-[60] flex items-end justify-center bg-black/80 p-0 backdrop-blur-sm sm:items-center sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="detalle-titulo"
-      onClick={onClose}
-    >
-      <div
-        className="animate-pop relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-grape-600/50 bg-ink-soft sm:rounded-3xl"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          ref={closeRef}
-          type="button"
+    <AnimatePresence>
+      {pizza && (
+        <m.div
+          key="pizza-dialog"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/80 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="detalle-titulo"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-ink/80 text-xl text-cream backdrop-blur transition-colors hover:bg-grape-600"
-          aria-label="Cerrar detalles"
         >
-          ×
-        </button>
+          <m.div
+            initial={{ opacity: 0, y: 60, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-grape-600/50 bg-ink-soft sm:rounded-3xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              ref={closeRef}
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-ink/80 text-xl text-cream backdrop-blur transition-colors hover:bg-grape-600"
+              aria-label="Cerrar detalles"
+            >
+              ×
+            </button>
 
-        <div className="grid gap-0 sm:grid-cols-2">
-          <div className="relative aspect-[3/4] w-full bg-black sm:aspect-auto sm:min-h-full">
-            <Image
-              src={pizza.poster}
-              alt={`Pieza gráfica de la pizza ${pizza.name}`}
-              fill
-              priority
-              sizes="(max-width: 640px) 100vw, 384px"
-              className="object-cover object-top"
-            />
-          </div>
-
-          <div className="flex flex-col p-6 sm:p-8">
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-basil-400">
-              {pizza.category === "clasicas" ? "Clásica" : "Especial de la casa"}
-            </span>
-
-            <h2 id="detalle-titulo" className="font-display mt-2 text-4xl text-cream">
-              {pizza.name}
-            </h2>
-
-            <p className="mt-4 text-sm leading-relaxed text-cream-dim">{pizza.description}</p>
-
-            <dl className="mt-6 grid grid-cols-3 gap-2 rounded-2xl border border-grape-700/45 bg-ink-card/60 p-4 text-center">
-              <div>
-                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Tamaño</dt>
-                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.label}</dd>
-              </div>
-              <div className="border-x border-grape-700/45">
-                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Porciones</dt>
-                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.slices}</dd>
-              </div>
-              <div>
-                <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Diámetro</dt>
-                <dd className="font-display mt-1 text-lg text-basil-300">{site.size.diameterCm} cm</dd>
-              </div>
-            </dl>
-
-            <div className="mt-6">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-cream-dim">
-                Ingredientes
-              </h3>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {pizza.ingredients.map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-full border border-grape-600/60 bg-grape-700/25 px-3 py-1.5 text-xs text-cream"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-auto pt-8">
-              <div className="flex items-baseline justify-between border-t border-grape-700/50 pt-5">
-                <span className="text-sm text-cream-dim">Precio</span>
-                <span className="font-display text-4xl text-basil-300">{formatPrice(pizza.price)}</span>
+            <div className="grid gap-0 sm:grid-cols-2">
+              <div className="relative aspect-[3/4] w-full bg-black sm:aspect-auto sm:min-h-full">
+                <Image
+                  src={pizza.poster}
+                  alt={`Pieza gráfica de la pizza ${pizza.name}`}
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 100vw, 384px"
+                  className="object-cover object-top"
+                />
               </div>
 
-              {qtyOf(pizza.slug) > 0 ? (
-                <>
-                  <div className="mt-5">
-                    <QtyStepper
-                      qty={qtyOf(pizza.slug)}
-                      name={pizza.name}
-                      onChange={(value) => setQty(pizza.slug, value)}
-                    />
+              <div className="flex flex-col p-6 sm:p-8">
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-basil-400">
+                  {pizza.category === "clasicas" ? "Clásica" : "Especial de la casa"}
+                </span>
+
+                <h2 id="detalle-titulo" className="font-display mt-2 text-4xl text-cream">
+                  {pizza.name}
+                </h2>
+
+                <p className="mt-4 text-sm leading-relaxed text-cream-dim">{pizza.description}</p>
+
+                <dl className="mt-6 grid grid-cols-3 gap-2 rounded-2xl border border-grape-700/45 bg-ink-card/60 p-4 text-center">
+                  <div>
+                    <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Tamaño</dt>
+                    <dd className="font-display mt-1 text-lg text-basil-300">{site.size.label}</dd>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      openCart();
-                    }}
-                    className="mt-3 block w-full rounded-full border border-grape-600/60 px-6 py-3.5 text-center font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
-                  >
-                    Ver mi pedido
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => add(pizza.slug)}
-                  className="mt-5 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
-                >
-                  Agregar al pedido
-                </button>
-              )}
+                  <div className="border-x border-grape-700/45">
+                    <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Porciones</dt>
+                    <dd className="font-display mt-1 text-lg text-basil-300">{site.size.slices}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[0.65rem] uppercase tracking-widest text-cream-dim">Diámetro</dt>
+                    <dd className="font-display mt-1 text-lg text-basil-300">{site.size.diameterCm} cm</dd>
+                  </div>
+                </dl>
+
+                <div className="mt-6">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-cream-dim">
+                    Ingredientes
+                  </h3>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {pizza.ingredients.map((item) => (
+                      <li
+                        key={item}
+                        className="rounded-full border border-grape-600/60 bg-grape-700/25 px-3 py-1.5 text-xs text-cream"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-auto pt-8">
+                  <div className="flex items-baseline justify-between border-t border-grape-700/50 pt-5">
+                    <span className="text-sm text-cream-dim">Precio</span>
+                    <span className="font-display text-4xl text-basil-300">{formatPrice(pizza.price)}</span>
+                  </div>
+
+                  {qtyOf(pizza.slug) > 0 ? (
+                    <>
+                      <div className="mt-5">
+                        <QtyStepper
+                          qty={qtyOf(pizza.slug)}
+                          name={pizza.name}
+                          onChange={(value) => setQty(pizza.slug, value)}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onClose();
+                          openCart();
+                        }}
+                        className="mt-3 block w-full rounded-full border border-grape-600/60 px-6 py-3.5 text-center font-semibold text-cream transition-colors hover:border-basil-400 hover:text-basil-300"
+                      >
+                        Ver mi pedido
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => add(pizza.slug)}
+                      className="mt-5 block w-full rounded-full bg-basil-500 px-6 py-3.5 text-center font-semibold text-ink transition-colors hover:bg-basil-400"
+                    >
+                      Agregar al pedido
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </m.div>
+        </m.div>
+      )}
+    </AnimatePresence>
   );
 }

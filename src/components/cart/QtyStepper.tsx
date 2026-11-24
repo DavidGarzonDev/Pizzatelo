@@ -1,5 +1,7 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { MAX_QTY } from "@/lib/cart";
 
 interface QtyStepperProps {
@@ -23,13 +25,30 @@ export function QtyStepper({ qty, name, onChange, size = "lg" }: QtyStepperProps
       role="group"
       aria-label={`Cantidad de ${name}`}
     >
-      <button type="button" onClick={() => onChange(qty - 1)} className={button} aria-label={`Quitar una ${name}`}>
+      <m.button whileTap={{ scale: 0.85 }} type="button" onClick={() => onChange(qty - 1)} className={button} aria-label={`Quitar una ${name}`}>
         −
-      </button>
-      <span className={`min-w-8 text-center font-semibold text-ink ${big ? "text-sm" : "text-xs"}`} aria-live="polite">
-        {big ? `${qty} en tu pedido` : qty}
+      </m.button>
+      <span
+        className={`relative min-w-8 overflow-hidden text-center font-semibold text-ink ${big ? "text-sm" : "text-xs"}`}
+        aria-live="polite"
+      >
+        {/* El número nuevo entra desde abajo y el anterior sale hacia arriba */}
+        <AnimatePresence mode="popLayout" initial={false}>
+          <m.span
+            key={qty}
+            initial={{ y: 14, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -14, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="inline-block tabular-nums"
+          >
+            {qty}
+          </m.span>
+        </AnimatePresence>
+        {big ? " en tu pedido" : null}
       </span>
-      <button
+      <m.button
+        whileTap={{ scale: 0.85 }}
         type="button"
         onClick={() => onChange(qty + 1)}
         disabled={qty >= MAX_QTY}
@@ -37,7 +56,7 @@ export function QtyStepper({ qty, name, onChange, size = "lg" }: QtyStepperProps
         aria-label={`Agregar otra ${name}`}
       >
         +
-      </button>
+      </m.button>
     </div>
   );
 }

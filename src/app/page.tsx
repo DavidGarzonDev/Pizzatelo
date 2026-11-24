@@ -1,6 +1,8 @@
 import { CartBar } from "@/components/cart/CartBar";
 import { CartSheet } from "@/components/cart/CartSheet";
 import { Footer } from "@/components/Footer";
+import { Marquee } from "@/components/Marquee";
+import { MotionProvider } from "@/components/MotionProvider";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Hours } from "@/components/Hours";
@@ -53,11 +55,13 @@ function StructuredData() {
 
 export default function Home() {
   return (
+    <MotionProvider>
     <CartProvider>
       <StructuredData />
       <Header />
       <main>
         <Hero />
+        <Marquee />
         <MenuExplorer />
         <Payments />
         <Hours />
@@ -67,5 +71,6 @@ export default function Home() {
       <CartBar />
       <CartSheet />
     </CartProvider>
+    </MotionProvider>
   );
 }

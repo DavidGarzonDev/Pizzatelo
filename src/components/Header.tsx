@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useScroll, useSpring } from "motion/react";
+import * as m from "motion/react-m";
 import { useEffect, useState } from "react";
 import { site } from "@/config/site";
 import { useCart } from "@/lib/cart";
@@ -15,6 +17,9 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const cart = useCart();
+  // Barra de progreso de lectura: sigue el scroll con un resorte suave
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
 
   // "Pedir" lleva al menú; si ya hay pizzas en el carrito, abre el pedido
   const goToOrder = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -47,7 +52,7 @@ export function Header() {
             alt=""
             width={48}
             height={48}
-            className="h-11 w-11 object-contain"
+            className="h-11 w-11 object-contain transition-transform duration-500 hover:rotate-[-12deg] hover:scale-110"
             priority
           />
           <span className="leading-none">
@@ -129,6 +134,12 @@ export function Header() {
           </a>
         </nav>
       </div>
+
+      <m.div
+        aria-hidden="true"
+        className="scroll-progress absolute inset-x-0 bottom-0 h-0.5"
+        style={{ scaleX: progress, opacity: scrolled ? 1 : 0 }}
+      />
     </header>
   );
 }
